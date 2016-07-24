@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Simple Text Shortcodes
  * Description: Simple plugin for creating and managing text shortcodes
- * Version: 0.1
+ * Version: 0.2
  * Author: Alexander Panayotov
  * Author URI: https://github.com/alpanayotov
  * License: GPL2
@@ -18,7 +18,7 @@ class Shortcodes_Manager {
 		add_action( 'init', array( $this, 'create_post_type') );
 		add_action( 'after_setup_theme', array( $this, 'register_shortcode') );
 
-		add_action( 'manage_posts_custom_column', array( __CLASS__ , 'set_admin_column_content' ), 10, 2 );
+		add_action( 'manage_alp_shortcode_posts_custom_column', array( __CLASS__ , 'set_admin_column_content' ), 10, 2 );
 		add_filter( 'manage_alp_shortcode_posts_columns', array( __CLASS__ , 'set_admin_column_head' ) );
 	}
 
@@ -44,7 +44,7 @@ class Shortcodes_Manager {
 			'show_ui'             => true,
 			'capability_type'     => 'post',
 			'hierarchical'        => false,
-			'_edit_link'          =>  'post.php?post=%d',
+			'_edit_link'          => 'post.php?post=%d',
 			'rewrite'             => false,
 			'query_var'           => true,
 			'supports'            => array('title', 'editor'),
@@ -52,7 +52,7 @@ class Shortcodes_Manager {
 
 		$arguments = apply_filters( 'alp_posttype_args', $arguments );
 
-		register_post_type('alp_shortcode', $arguments );
+		register_post_type( 'alp_shortcode', $arguments );
 	}
 
 	public function register_shortcode(){
@@ -83,13 +83,13 @@ class Shortcodes_Manager {
 		unset( $columns['date'] );
 		
 		$columns['shortcode'] = __( 'Shortcode', 'alp' );
-		$columns['date']     = __( 'Date', 'alp' );
+		$columns['date']      = __( 'Date', 'alp' );
 
 		return $columns;
 	}
 
 	public static function set_admin_column_content( $column_name, $post_id ) {
-		if ( $column_name === 'shortcode' ) {
+		if ( 'shortcode' === $column_name ) {
 			echo '<code>[text_block id='. $post_id .' description="' . get_the_title( $post_id ) . '"]</code>';
 		}
 	}
